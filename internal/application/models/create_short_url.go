@@ -1,0 +1,15 @@
+package models
+
+type CreateShortURLInput struct {
+	URL string `json:"url"`
+}
+
+type CreateShortURLResponse struct {
+	ID          string `json:"id"`
+	Code        string `json:"code"`
+	OriginalURL string `json:"original_url"`
+	ShortURL    string `json:"short_url"`
+	Clicks      int    `json:"clicks"`
+	UsedAt      string `json:"used_at"`
+	CreatedAt   string `json:"created_at"`
+}

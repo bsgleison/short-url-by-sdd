@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: short-url-localstack
+    ports:
+      - "4566:4566"
+    environment:
+      SERVICES: dynamodb
+      AWS_DEFAULT_REGION: us-east-1
+      DEBUG: "1"
+      DATA_DIR: /tmp/localstack/data
+    volumes:
+      - "./internal/infra/init:/etc/localstack/init/ready.d"
+      - "/var/run/docker.sock:/var/run/docker.sock"
