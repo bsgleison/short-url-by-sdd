@@ -29,6 +29,8 @@ Respect this sufix rules when creating any of these files:
 - `*_service.go` - sufix for all services files, e.g. `short_url_service.go`
 - `*_test.go` - sufix for all tests files, e.g. `create_short_url_usecase_test.go`
 - `*_entity` - sufix for all entities files, e.g. `url_entity.go`
+- `*_publisher` - sufix for all queue publisher, e.g. `url_clicked_publisher.go`
+- `*_consumer` - sufix for all queue consumers, e.g. `url_clicked_consumer.go`
 
 ## Implementation convetions
 
