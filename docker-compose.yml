@@ -7,7 +7,7 @@ services:
     ports:
       - "4566:4566"
     environment:
-      SERVICES: dynamodb
+      SERVICES: dynamodb,sqs
       AWS_DEFAULT_REGION: us-east-1
       DEBUG: "1"
       DATA_DIR: /tmp/localstack/data

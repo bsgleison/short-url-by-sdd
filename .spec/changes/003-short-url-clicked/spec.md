@@ -31,6 +31,9 @@ Use the follow orientations to keep a standard while implementing the solution:
 
 ## Tasks
 
-1. [] Create the new route using the skill `.claude/skills/create-api-route.SKILL.md`
-2. [] Validate and find the short url, use example of the already implementation in `./internal/usecase/get_short_url_by_code.go`
-3. [] Create the publisher to pusblish the click event
+1. [x] Create the new route using the skill `.claude/skills/create-api-route.SKILL.md`
+   > 2026-06-18 00:00 - Added `GET /{code}` redirect handling and wired it into the API entrypoint.
+2. [x] Validate and find the short url, use example of the already implementation in `./internal/usecase/get_short_url_by_code.go`
+   > 2026-06-18 00:00 - Reused the existing code validation flow and lookup behavior to resolve the target URL before redirecting.
+3. [x] Create the publisher to pusblish the click event
+   > 2026-06-18 00:00 - Implemented an SQS publisher that sends the clicked code with a message group ID derived from the code.
