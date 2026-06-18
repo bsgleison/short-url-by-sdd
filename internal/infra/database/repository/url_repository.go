@@ -47,9 +47,11 @@ func (r *URLRepository) FindByCode(ctx context.Context, code string) (*entity.UR
 		return nil, nil
 	}
 
-	result, err := r.client.Scan(ctx, &dynamodb.ScanInput{
-		TableName:        aws.String(r.table),
-		FilterExpression: aws.String("Code = :code"),
+	result, err := r.client.Query(ctx, &dynamodb.QueryInput{
+		TableName:                aws.String(r.table),
+		IndexName:                aws.String("code-index"),
+		KeyConditionExpression:   aws.String("#code = :code"),
+		ExpressionAttributeNames: map[string]string{"#code": "Code"},
 		ExpressionAttributeValues: map[string]types.AttributeValue{
 			":code": &types.AttributeValueMemberS{Value: code},
 		},

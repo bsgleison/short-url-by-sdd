@@ -50,8 +50,11 @@ func main() {
 
 	createShortURLUseCase := usecase.NewCreateShortURLUseCase(urlRepository, baseURL)
 	shortURLHandler := handler.NewCreateShortURLHandler(createShortURLUseCase)
+	getShortURLByCodeUseCase := usecase.NewGetShortURLByCodeUseCase(urlRepository)
+	getShortURLByCodeHandler := handler.NewGetShortURLByCodeHandler(getShortURLByCodeUseCase)
 
 	r.Post("/shorten", shortURLHandler.Create)
+	r.Get("/details/{code}", getShortURLByCodeHandler.Get)
 
 	port := os.Getenv("PORT")
 	if port == "" {
