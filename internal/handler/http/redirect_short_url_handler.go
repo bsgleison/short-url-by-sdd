@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/google/uuid"
 
 	"github.com/bsgleison/short-url-by-sdd/internal/application/models"
 	"github.com/bsgleison/short-url-by-sdd/internal/application/usecase"
@@ -12,7 +13,7 @@ import (
 )
 
 type URLClickedPublisher interface {
-	Publish(ctx context.Context, code string) error
+	Publish(ctx context.Context, code string, id string) error
 }
 
 type RedirectShortURLHandler struct {
@@ -58,7 +59,9 @@ func (h *RedirectShortURLHandler) Redirect(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	if err := h.publisher.Publish(r.Context(), response.Code); err != nil {
+	messageId := uuid.NewString()
+
+	if err := h.publisher.Publish(r.Context(), response.Code, messageId); err != nil {
 		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		return
 	}

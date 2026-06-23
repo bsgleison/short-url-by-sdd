@@ -3,8 +3,8 @@ package publisher
 import (
 	"context"
 	"encoding/json"
+	"log"
 
-	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 )
 
@@ -20,7 +20,7 @@ func NewURLClickedPublisher(client *sqs.Client, queueURL string) *URLClickedPubl
 	}
 }
 
-func (p *URLClickedPublisher) Publish(ctx context.Context, code string) error {
+func (p *URLClickedPublisher) Publish(ctx context.Context, code string, id string) error {
 	if p == nil || p.client == nil || p.queueURL == "" {
 		return nil
 	}
@@ -30,10 +30,14 @@ func (p *URLClickedPublisher) Publish(ctx context.Context, code string) error {
 		return err
 	}
 
+	body := string(payload)
+	log.Println(body)
+
 	_, err = p.client.SendMessage(ctx, &sqs.SendMessageInput{
-		QueueUrl:       aws.String(p.queueURL),
-		MessageBody:    aws.String(string(payload)),
-		MessageGroupId: aws.String(code),
+		QueueUrl:               &p.queueURL,
+		MessageBody:            &body,
+		MessageDeduplicationId: &id,
+		MessageGroupId:         &code,
 	})
 	return err
 }

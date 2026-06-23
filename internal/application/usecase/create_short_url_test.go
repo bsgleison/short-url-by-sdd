@@ -17,20 +17,6 @@ func newFakeURLRepository() *fakeURLRepository {
 	return &fakeURLRepository{items: make(map[string]*entity.URL)}
 }
 
-func (f *fakeURLRepository) Save(_ context.Context, url *entity.URL) error {
-	f.items[url.ID] = url
-	return nil
-}
-
-func (f *fakeURLRepository) FindByCode(_ context.Context, code string) (*entity.URL, error) {
-	for _, item := range f.items {
-		if item.Code == code {
-			return item, nil
-		}
-	}
-	return nil, nil
-}
-
 func TestCreateShortURLUseCaseRejectsInvalidURL(t *testing.T) {
 	repo := newFakeURLRepository()
 	uc := NewCreateShortURLUseCase(repo, "http://short.com")

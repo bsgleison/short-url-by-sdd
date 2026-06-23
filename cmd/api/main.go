@@ -16,6 +16,7 @@ import (
 	"github.com/bsgleison/short-url-by-sdd/internal/application/usecase"
 	handler "github.com/bsgleison/short-url-by-sdd/internal/handler/http"
 	repo "github.com/bsgleison/short-url-by-sdd/internal/infra/database/repository"
+	"github.com/bsgleison/short-url-by-sdd/internal/infra/messaging/consumer"
 	publisher "github.com/bsgleison/short-url-by-sdd/internal/infra/messaging/publisher"
 )
 
@@ -55,14 +56,18 @@ func main() {
 		baseURL = "http://short.com"
 	}
 
+	newUrlClicUseCase := usecase.NewURLClickedUseCase(urlRepository)
+
 	queueURL := os.Getenv("SQS_QUEUE_URL")
-	redirectPublisher := publisher.NewURLClickedPublisher(sqsClient, queueURL)
+	newUrlClickedPublisher := publisher.NewURLClickedPublisher(sqsClient, queueURL)
+	newUrlClickedConsumer := consumer.NewURLClickedConsumer(sqsClient, queueURL, newUrlClicUseCase)
+	newUrlClickedConsumer.Start(context)
 
 	createShortURLUseCase := usecase.NewCreateShortURLUseCase(urlRepository, baseURL)
 	shortURLHandler := handler.NewCreateShortURLHandler(createShortURLUseCase)
 	getShortURLByCodeUseCase := usecase.NewGetShortURLByCodeUseCase(urlRepository)
 	getShortURLByCodeHandler := handler.NewGetShortURLByCodeHandler(getShortURLByCodeUseCase)
-	redirectShortURLHandler := handler.NewRedirectShortURLHandler(getShortURLByCodeUseCase, redirectPublisher)
+	redirectShortURLHandler := handler.NewRedirectShortURLHandler(getShortURLByCodeUseCase, newUrlClickedPublisher)
 
 	r.Post("/shorten", shortURLHandler.Create)
 	r.Get("/details/{code}", getShortURLByCodeHandler.Get)

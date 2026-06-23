@@ -42,7 +42,7 @@ type fakeURLClickedPublisher struct {
 	publishedCodes []string
 }
 
-func (f *fakeURLClickedPublisher) Publish(_ context.Context, code string) error {
+func (f *fakeURLClickedPublisher) Publish(_ context.Context, code string, id string) error {
 	f.publishedCodes = append(f.publishedCodes, code)
 	return nil
 }
