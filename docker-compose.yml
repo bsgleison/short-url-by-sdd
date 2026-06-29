@@ -9,8 +9,17 @@ services:
     environment:
       SERVICES: dynamodb,sqs
       AWS_DEFAULT_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      LOCALSTACK_AUTH_TOKEN: ???????
       DEBUG: "1"
       DATA_DIR: /tmp/localstack/data
     volumes:
       - "./internal/infra/init:/etc/localstack/init/ready.d"
       - "/var/run/docker.sock:/var/run/docker.sock"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:4566/_localstack/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
